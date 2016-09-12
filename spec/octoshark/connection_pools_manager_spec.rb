@@ -37,6 +37,16 @@ describe Octoshark::ConnectionPoolsManager do
     end
   end
 
+  describe '#add_connection' do
+    it 'adds a connection' do
+      manager = Octoshark::ConnectionPoolsManager.new({})
+
+      manager.add_connection(:db1, configs[:db1])
+
+      expect(manager.find_connection_pool(:db1)).to be_an_instance_of(ActiveRecord::ConnectionAdapters::ConnectionPool)
+    end
+  end
+
   describe '#with_connection' do
     it "can use multiple connections" do
       manager = Octoshark::ConnectionPoolsManager.new(configs)

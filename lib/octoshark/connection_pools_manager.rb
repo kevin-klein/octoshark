@@ -22,6 +22,7 @@ module Octoshark
     attr_reader :connection_pools
 
     def initialize(configs = {})
+      @mutex = Mutex.new
       @configs = configs.with_indifferent_access
       setup_connection_pools
 
@@ -31,6 +32,12 @@ module Octoshark
     def reset!
       disconnect!
       setup_connection_pools
+    end
+
+    def add_connection(name, config)
+      @mutex.synchronize do
+        @connection_pools[name] = create_connection_pool(name, config)
+      end
     end
 
     def with_connection(name, database_name = nil, &block)
