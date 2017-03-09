@@ -40,16 +40,11 @@ module Octoshark
       end
     end
 
-    def with_connection(name, database_name = nil, &block)
+    def with_connection(name, &block)
       connection_pool = find_connection_pool(name)
 
       connection_pool.with_connection do |connection|
         connection.connection_name = name
-
-        if database_name
-          connection.database_name = database_name
-          connection.execute("use #{database_name}")
-        end
 
         change_connection_reference(connection) do
           yield(connection)

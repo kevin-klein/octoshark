@@ -1,7 +1,7 @@
 require 'bundler/gem_tasks'
 require 'rspec/core/rake_task'
 require 'yaml'
-require 'mysql2'
+require 'pg'
 require 'octoshark'
 
 RSpec::Core::RakeTask.new(:spec)

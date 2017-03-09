@@ -85,42 +85,6 @@ describe Octoshark::ConnectionPoolsManager do
 
       expect { manager.with_connection(:invalid) }.to raise_error(Octoshark::Error::NoConnection)
     end
-
-    context "using specific database", mysql2: true do
-      it "can use specific database" do
-        manager = Octoshark::ConnectionPoolsManager.new(mysql2_configs)
-
-        db1 = mysql2_configs[:db1]['database']
-        db2 = mysql2_configs[:db2]['database']
-
-        manager.with_connection(:db1, db1) do
-          expect(db(manager.current_connection)).to eq(db1)
-
-          manager.with_connection(:db2, db2) do
-            expect(db(manager.current_connection)).to eq(db2)
-          end
-
-          expect(db(manager.current_connection)).to eq(db1)
-        end
-      end
-
-      it "sets database name on the connection" do
-        manager = Octoshark::ConnectionPoolsManager.new(mysql2_configs)
-
-        db1 = mysql2_configs[:db1]['database']
-
-        manager.with_connection(:db1, db1) do |connection|
-          expect(connection.database_name).to eq('octoshark_db1')
-        end
-      end
-
-      it "returns value from execution" do
-        manager = Octoshark::ConnectionPoolsManager.new(mysql2_configs)
-        db1 = mysql2_configs[:db1]['database']
-        result = manager.with_connection(:db1, db1) { |connection| connection.execute("SELECT 1") }.to_a
-        expect(result).to eq([[1]])
-      end
-    end
   end
 
   describe "#disconnect!" do
